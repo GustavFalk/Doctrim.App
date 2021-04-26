@@ -1,0 +1,128 @@
+﻿@page "/UploadDocument"
+
+<h3>Upload Document</h3>
+
+    <RadzenCard Style="width:50%; margin-bottom: 20px; height:500px;">
+        <div class="row">
+            <InputFile OnChange="OnInputFileChange" multiple />
+        </div>
+        <div class="row">
+            <RadzenLabel Text="Document name" />
+            <RadzenTextBox @bind-Value="Model.DocumentName"></RadzenTextBox>
+        </div>
+        <div class="row">
+            <RadzenLabel Text="Date:" />
+            <RadzenDatePicker @bind-Value=Model.UploadDate DateFormat="yyyy-MM-dd" Name="DateSelect" />
+            
+        </div>
+        <div class="row">
+            <RadzenDropDown @bind-Value="Model.Type" Data="DocumentTypes" Placeholder="Select contract type" Name="TypeSelect"></RadzenDropDown>
+            
+        </div>
+
+        <div class="row">
+            <RadzenCard Style="width:50%; border:none; ">                
+                <div class="tags">
+                    <RadzenLabel Text="Add Tags:" />
+                    <RadzenTextBox Placeholder="Tag" @bind-Value="Tag.Tag"></RadzenTextBox>
+                    <RadzenButton Text="Add Tag" Icon="add" Click="AddTag"></RadzenButton>
+                </div>
+                    <div class="tags" style="display: flex">
+                        <RadzenListBox @bind-Value="Tag" Data="Model.Tags" TextProperty="Tag"></RadzenListBox>
+                    </div>                
+            </RadzenCard>
+        </div>
+        <div class="row">
+            <RadzenButton Text="Upload" Click="Upload"></RadzenButton>
+        </div>
+    </RadzenCard>
+
+    @code {
+
+
+        public DocumentFile Model { get; set; } = new DocumentFile();
+
+        public List<DocumentType> DocumentTypes { get; set; } = new List<DocumentType>();
+
+        public MetadataTag Tag { get; set; } = new MetadataTag();
+
+        [Inject]
+        private IDoctrimAPIService DoctrimAPIService { get; set; }
+
+        protected async override Task OnInitializedAsync()
+        {
+            DocumentTypes = (await DoctrimAPIService.GetDocumentTypes()).ToList();
+
+        }
+
+        public void AddTag()
+        {
+            Model.Tags.Add(Tag);
+            Tag = new MetadataTag();
+        }
+
+        public async Task Upload()
+        {
+            // Changes the document to a byte array
+            var file = selectedFiles[0];
+            Stream stream = file.OpenReadStream();
+            MemoryStream ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            stream.Close();
+
+            Model.FileByteArray = ms.ToArray();
+
+
+            // Creates a test object to send with POST method
+            Guid docTestGuid = Guid.NewGuid();
+            Guid tagTestGuid = Guid.NewGuid();
+            List<MetadataTag> testTags = new List<MetadataTag>();
+
+
+            MetadataTag tag = new MetadataTag()
+            {
+                Tag = "testag",
+                DocumentGuid = docTestGuid,
+                Id = 58
+            };
+            testTags.Add(tag);
+
+
+            DocumentType documentType = new DocumentType()
+            {
+                Id = 2,
+                UniqueId = new Guid("bfb58678-f7a9-4c94-ad7b-ef5f1cdc68f2"),
+                Type = "Schema"
+            };
+
+            DocumentFile documentFile = new DocumentFile()
+            {
+                Id = 155,
+                UniqueId = docTestGuid,
+                UploadDate = DateTime.Now,
+                DocumentName = "testar",
+                LegalEntity = Guid.NewGuid(),
+                TypeGuid = documentType.UniqueId,
+                Type = documentType,
+                FileByteArray = Model.FileByteArray,
+                Tags = testTags
+            };
+
+            //sends object through POST method
+            await DoctrimAPIService.PostDocumentFile(documentFile);
+        }
+
+
+
+
+
+
+        private IReadOnlyList<IBrowserFile> selectedFiles;
+        private void OnInputFileChange(InputFileChangeEventArgs e)
+        {
+            selectedFiles = e.GetMultipleFiles();
+            StateHasChanged();
+        }
+
+    }
+    
