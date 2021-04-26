@@ -1,5 +1,6 @@
 ﻿@page "/UploadDocument"
 
+
 <h3>Upload Document</h3>
 
     <RadzenCard Style="width:50%; margin-bottom: 20px; height:500px;">
@@ -107,7 +108,6 @@
                 FileByteArray = Model.FileByteArray,
                 Tags = testTags
             };
-
             //sends object through POST method
             await DoctrimAPIService.PostDocumentFile(documentFile);
         }
