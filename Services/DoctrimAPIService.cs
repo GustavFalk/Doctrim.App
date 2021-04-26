@@ -24,24 +24,23 @@ namespace Services
             return await _httpClient.GetJsonAsync<List<DocumentType>>("api/DocumentTypes");
         }
 
-        public async Task<DocumentFile> PostDocumentFile(DocumentFile file)
+        public async Task PostDocumentFile(DocumentFile file)
         {
 
-            int id = 1;
 
-           //await _httpClient.PostJsonAsync("api/Documents", file);
+            await _httpClient.PostJsonAsync("api/Documents", file);
 
-            var fileJson =
-                new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
+            //var fileJson =
+            //    new StringContent(JsonSerializer.Serialize(file), Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("api/Documents", fileJson);
+            //var response = await _httpClient.PostAsync("api/Documents", fileJson);
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await JsonSerializer.DeserializeAsync<DocumentFile>(await response.Content.ReadAsStreamAsync());
-            }
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    return await JsonSerializer.DeserializeAsync<DocumentFile>(await response.Content.ReadAsStreamAsync());
+            //}
 
-            return null;
+            //return null;
 
 
 
