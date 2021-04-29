@@ -10,6 +10,6 @@ namespace Services
    public interface IDoctrimAPIService
     {
         public Task<List<DocumentType>> GetDocumentTypes();
-        public Task PostDocumentFile(DocumentFile file);
+        public Task PostDocumentFile(DocumentPostDTO documentPost);
     }
 }

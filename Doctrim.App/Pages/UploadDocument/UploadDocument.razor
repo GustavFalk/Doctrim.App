@@ -2,10 +2,10 @@
 
 
 <h3>Upload Document</h3>
-
+<EditForm Model="Model" OnSubmit="Upload">
     <RadzenCard Style="width:50%; margin-bottom: 20px; height:500px;">
         <div class="row">
-            <InputFile OnChange="OnInputFileChange" multiple />
+            <InputFile @bind-Value="FileByteArray" OnChange="OnInputFileChange"/>
         </div>
         <div class="row">
             <RadzenLabel Text="Document name" />
@@ -14,29 +14,31 @@
         <div class="row">
             <RadzenLabel Text="Date:" />
             <RadzenDatePicker @bind-Value=Model.UploadDate DateFormat="yyyy-MM-dd" Name="DateSelect" />
-            
+
         </div>
         <div class="row">
-            <RadzenDropDown @bind-Value="Model.Type" Data="DocumentTypes" Placeholder="Select contract type" Name="TypeSelect"></RadzenDropDown>
-            
+            <RadzenLabel Text="Contract type:" />
+            <RadzenDropDown @bind-Value="DocumentType" Data="DocumentTypes" Placeholder="Select contract type" Name="TypeSelect"></RadzenDropDown>
+
         </div>
 
         <div class="row">
-            <RadzenCard Style="width:50%; border:none; ">                
+            <RadzenCard Style="width:50%; border:none; ">
                 <div class="tags">
                     <RadzenLabel Text="Add Tags:" />
                     <RadzenTextBox Placeholder="Tag" @bind-Value="Tag.Tag"></RadzenTextBox>
                     <RadzenButton Text="Add Tag" Icon="add" Click="AddTag"></RadzenButton>
                 </div>
-                    <div class="tags" style="display: flex">
-                        <RadzenListBox @bind-Value="Tag" Data="Model.Tags" TextProperty="Tag"></RadzenListBox>
-                    </div>                
+                <div class="tags" style="display: flex">
+                    <RadzenListBox @bind-Value="Tag" Data="Model.Tags" TextProperty="Tag"></RadzenListBox>
+                </div>
             </RadzenCard>
         </div>
         <div class="row">
-            <RadzenButton Text="Upload" Click="Upload"></RadzenButton>
+            <button type="submit">Upload</button>
         </div>
     </RadzenCard>
+</EditForm>
 
     @code {
 
@@ -46,6 +48,15 @@
         public List<DocumentType> DocumentTypes { get; set; } = new List<DocumentType>();
 
         public MetadataTag Tag { get; set; } = new MetadataTag();
+
+        public DocumentType DocumentType  { get; set; }
+
+        public DocumentPostDTO PostDTO { get; set; } = new DocumentPostDTO();
+
+        public byte[] FileByteArray { get; set; }
+
+
+
 
         [Inject]
         private IDoctrimAPIService DoctrimAPIService { get; set; }
@@ -64,52 +75,24 @@
 
         public async Task Upload()
         {
-            // Changes the document to a byte array
+            //Changes the document to a byte array
             var file = selectedFiles[0];
             Stream stream = file.OpenReadStream();
             MemoryStream ms = new MemoryStream();
             await stream.CopyToAsync(ms);
             stream.Close();
 
-            Model.FileByteArray = ms.ToArray();
+            FileByteArray = ms.ToArray();
 
 
-            // Creates a test object to send with POST method
-            Guid docTestGuid = Guid.NewGuid();
-            Guid tagTestGuid = Guid.NewGuid();
-            List<MetadataTag> testTags = new List<MetadataTag>();
+            //assigns unique identifier to document
+            Model.UniqueId = Guid.NewGuid();
+            Model.TypeGuid = DocumentType.UniqueId;
 
-
-            MetadataTag tag = new MetadataTag()
-            {
-                Tag = "testag",
-                DocumentGuid = docTestGuid,
-                Id = 58
-            };
-            testTags.Add(tag);
-
-
-            DocumentType documentType = new DocumentType()
-            {
-                Id = 2,
-                UniqueId = new Guid("bfb58678-f7a9-4c94-ad7b-ef5f1cdc68f2"),
-                Type = "Schema"
-            };
-
-            DocumentFile documentFile = new DocumentFile()
-            {
-                Id = 155,
-                UniqueId = docTestGuid,
-                UploadDate = DateTime.Now,
-                DocumentName = "testar",
-                LegalEntity = Guid.NewGuid(),
-                TypeGuid = documentType.UniqueId,
-                Type = documentType,
-                FileByteArray = Model.FileByteArray,
-                Tags = testTags
-            };
             //sends object through POST method
-            await DoctrimAPIService.PostDocumentFile(documentFile);
+            PostDTO.DocumentFile = Model;
+            PostDTO.FileByteArray = FileByteArray;
+            await DoctrimAPIService.PostDocumentFile(PostDTO);
         }
 
 
