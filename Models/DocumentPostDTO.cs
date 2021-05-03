@@ -12,5 +12,6 @@ namespace Models
 
         public byte[] FileByteArray { get; set; }
 
+        public string FileInfo { get; set; }
     }
 }

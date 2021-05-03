@@ -1,0 +1,84 @@
+﻿
+<h3>DownloadForm</h3>
+
+
+
+
+//Legal Entity
+@*<RadzenDropDown AllowClear="true" TValue="string"
+    LoadData=@LoadData AllowFiltering="true"
+    Data=@customCustomersData TextProperty="CompanyName" ValueProperty="CustomerID"
+    Change=@(args => OnChange(args, "DropDown with custom filtering")) />*@
+//Type
+<RadzenLabel Text="Contract type:" />
+<RadzenDropDown @bind-Value="SelectedType" Data="DocumentTypes" Placeholder="Select contract type" Name="TypeSelect" Change="GetDocumentsFromType"></RadzenDropDown>
+
+//Between dates
+@*<h4>DatePicker</h4>
+    <RadzenDatePicker @bind-Value=@value DateFormat="d" Change=@(args => OnChange(args, "DatePicker", "MM/dd/yyyy")) />*@
+
+@*<h4>DatePicker</h4>
+    <RadzenDatePicker @bind-Value=@value DateFormat="d" Change=@(args => OnChange(args, "DatePicker", "MM/dd/yyyy")) />*@
+
+
+//Tag search
+@*<RadzenTextBox @oninput=@(args => OnChange(args.Value.ToString(), "TextBox with change on every input")) />*@
+
+
+
+<EditForm Model="FileId">
+    //DocumentFiles
+    <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@FileId Data=@DocumentFiles TextProperty="DocumentName" ValueProperty="Id"
+                   Style="height:200px" />
+    @if (FileId != 0)
+    {
+        ///TODO: Make an api call that works in the same way
+        <a href="https://localhost:44398/api/documents/download/@FileId" download="file.pdf">DOWNLOAD</a>
+    }
+</EditForm>
+
+
+@code {
+
+    public DocumentFile Model { get; set; }
+
+    public List<DocumentFile> DocumentFiles { get; set; }
+
+    public List<DocumentType> DocumentTypes { get; set; } = new List<DocumentType>();
+
+    public DocumentType SelectedType { get; set; }
+    public int FileId { get; set; }
+
+    [Inject]
+    private IDoctrimAPIService DoctrimAPIService { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var documentTask = DoctrimAPIService.GetAllDocuments();
+        var typeTask = DoctrimAPIService.GetDocumentTypes();
+        await Task.WhenAll(documentTask, typeTask);
+
+        DocumentFiles = documentTask.Result.ToList();
+        DocumentTypes = typeTask.Result.ToList();
+    }
+
+
+    protected async Task DownloadSelectedFile()
+    {
+
+        if (FileId != 0)
+        {
+            DocumentPostDTO file = await DoctrimAPIService.DownloadDocument(FileId);
+
+        }
+        else
+        {
+            //* Please select file //*
+        }
+    }
+
+    protected async Task GetDocumentsFromType()
+        {
+        DocumentFiles = await DoctrimAPIService.GetDocumentFilesFromType(SelectedType);
+        }
+}
