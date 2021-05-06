@@ -1,5 +1,5 @@
 
-using Doctrim.App.Data;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;

@@ -10,8 +10,7 @@ namespace Models
     public class DocumentType
     {
        
-        public int Id { get; set; }
-        
+             
         public Guid UniqueId { get; set; }
         [Required]
         public string Type { get; set; }

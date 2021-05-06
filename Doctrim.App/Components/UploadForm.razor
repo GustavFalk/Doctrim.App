@@ -1,40 +1,45 @@
 ﻿@inherits UploadFormBase 
 
 <h3>Upload Document</h3>
-<EditForm Model="Model" OnSubmit="Upload">
+<EditForm Model="Model" OnValidSubmit="Upload">
+    
     <RadzenCard Style="width:50%; margin-bottom: 20px; height:500px;">
-        <div class="row">
-            <InputFile @bind-Value="FileByteArray" OnChange="OnInputFileChange" />
-        </div>
-        <div class="row">
-            <RadzenLabel Text="Document name" />
-            <RadzenTextBox @bind-Value="Model.DocumentName"></RadzenTextBox>
-        </div>
-        <div class="row">
-            <RadzenLabel Text="Date:" />
-            <RadzenDatePicker @bind-Value=Model.UploadDate DateFormat="yyyy-MM-dd" Name="DateSelect" />
+        <div class="col-md-4">
+            <div class="row">
+                <InputFile @bind-Value="FileByteArray" OnChange="OnInputFileChange" />
+            </div>
+            <div class="row">
+                <RadzenLabel Text="Document name" />
+                <RadzenTextBox @bind-Value="Model.DocumentName"></RadzenTextBox>
+            </div>
+            <div class="row">
+                <RadzenLabel Text="Date:" />
+                <RadzenDatePicker @bind-Value=Model.UploadDate DateFormat="yyyy-MM-dd" Name="DateSelect" />
 
-        </div>
-        <div class="row">
-            <RadzenLabel Text="Contract type:" />
-            <RadzenDropDown @bind-Value="DocumentType" Data="DocumentTypes" Placeholder="Select contract type" Name="TypeSelect"></RadzenDropDown>
-
-        </div>
-
-        <div class="row">
-            <RadzenCard Style="width:50%; border:none; ">
+            </div>
+            <div class="row">
+                <RadzenLabel Text="Contract type:" />
+                <RadzenDropDown @bind-Value="DocumentType" Data="DocumentTypes" Placeholder="Select contract type" Name="TypeSelect"></RadzenDropDown>
+            </div>
+            <div class="row">
                 <div class="tags">
                     <RadzenLabel Text="Add Tags:" />
                     <RadzenTextBox Placeholder="Tag" @bind-Value="Tag.Tag"></RadzenTextBox>
                     <RadzenButton Text="Add Tag" Icon="add" Click="AddTag"></RadzenButton>
                 </div>
+
+            </div>
+            <div class="row">
                 <div class="tags" style="display: flex">
                     <RadzenListBox @bind-Value="Tag" Data="Model.Tags" TextProperty="Tag"></RadzenListBox>
                 </div>
-            </RadzenCard>
-        </div>
-        <div class="row">
-            <button type="submit">Upload</button>
+            </div>
+            <div class="row">
+                <button type="submit">Upload</button>
+            </div>
+            <div class="row">
+                <RadzenLabel Text=@Message/>
+            </div>
         </div>
     </RadzenCard>
 </EditForm>

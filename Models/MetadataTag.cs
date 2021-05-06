@@ -9,7 +9,7 @@ namespace Models
 {
     public class MetadataTag
     {
-        public int Id { get; set; }
+        
         public string Tag { get; set; }        
         public Guid DocumentGuid { get; set; }
 
