@@ -1,0 +1,74 @@
+﻿<h3>Upload Template</h3>
+<EditForm Model="TemplatePost" OnValidSubmit="Upload">
+
+    <RadzenCard Style="width:50%; margin-bottom: 20px; height:500px;">
+        <div class="col-md-4">
+            <div class="row">
+                <InputFile @bind-Value="TemplatePost.FileByteArray" OnChange="OnInputFileChange" />
+            </div>
+          
+            <div class="row">
+                <RadzenLabel Text="Template Name:" />
+                <RadzenTextBox @bind-Value="TemplatePost.TemplateDTO.TemplateName"></RadzenTextBox>
+            </div>
+        
+            <div class="row">
+                <button type="submit">Upload Template</button>
+            </div>
+            <div class="row">
+                <RadzenLabel Text=@Message />
+            </div>
+        </div>
+    </RadzenCard>
+</EditForm>
+
+@code {
+
+    public TemplatePostDTO TemplatePost { get; set; } = new TemplatePostDTO();
+
+    public IReadOnlyList<IBrowserFile> SelectedFiles { get; set; }
+
+    public string Message { get; set; } = "";
+
+    [Inject]
+    private IDoctrimAPIService DoctrimAPIService { get; set; }
+
+    protected void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        SelectedFiles = e.GetMultipleFiles();
+        StateHasChanged();
+    }
+
+    public async Task Upload()
+    {
+
+        if (SelectedFiles == null || TemplatePost.TemplateDTO.TemplateName == "")
+        {
+            Message = "Please fill in all fields";
+        }
+        else
+        {
+            //Takes the file extension and changes the document to a byte array
+            var file = SelectedFiles[0];
+            Stream stream = file.OpenReadStream();
+            MemoryStream ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            stream.Close();
+
+            TemplatePost.FileByteArray = ms.ToArray();
+
+
+            if (await DoctrimAPIService.PostTemplate(TemplatePost))
+            {
+                Message = "Upload completed";
+            }
+            else
+            {
+                Message = "Something went wrong with the upload";
+            }
+
+
+
+        }
+    }
+}

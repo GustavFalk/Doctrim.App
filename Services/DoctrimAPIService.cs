@@ -55,6 +55,24 @@ namespace Services
             }
         }
 
+        public async Task<bool> PostTemplate(TemplatePostDTO templatePost)
+        {
+            try
+            {
+                var templateJson =
+                    new StringContent(JsonSerializer.Serialize(templatePost), Encoding.UTF8, "application/json");
+
+                await _httpClient.PostAsync("api/Templates", templateJson);
+                return true;
+
+            }
+            catch (HttpRequestException httpEx)
+            {
+
+                return false;
+            }
+        }
+
         public async Task<List<DocumentFile>> GetAllDocuments()
         {
             try 
@@ -144,6 +162,22 @@ namespace Services
                 // TODO: add errorhandling
             }
 
+        }
+
+        public async Task<List<DocumentTemplate>> GetTemplates()
+        {
+            try
+            {
+
+                return await _httpClient.GetJsonAsync<List<DocumentTemplate>>("api/Templates");
+
+            }
+            catch (HttpRequestException httpEx)
+            {
+                return null;
+                // determine error here by inspecting httpEx.Message
+                // TODO: add errorhandling
+            }
         }
     }
 }

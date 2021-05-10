@@ -20,5 +20,8 @@ namespace Services
         public Task<List<DocumentFile>> GetDocumentFilesBetweenDates(DateTime first, DateTime last);
         public Task<List<DocumentFile>> GetDocumentFromTag(string tag);
         public Task<List<DocumentFile>> DocumentSearch(SearchDTO SearchParameter);
+        public Task<List<DocumentTemplate>> GetTemplates();
+
+        public Task<bool> PostTemplate(TemplatePostDTO templatePost);
     }
 }

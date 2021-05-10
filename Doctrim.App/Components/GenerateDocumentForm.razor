@@ -1,0 +1,51 @@
+﻿<h3>Generate Document</h3>
+<RadzenCard Style="width:45%; margin-bottom: 20px; height:500px;">
+    <div class="col-md-5">
+        <EditForm Model="SelectedTemplate" OnValidSubmit="Generate">
+
+
+
+            <div class="row">
+                <RadzenLabel Text="Contract type:" />
+                <RadzenDropDown @bind-Value="SelectedTemplate" Data="Templates" Placeholder="Select templates" Name="TemplateSelect"></RadzenDropDown>
+            </div>
+            <div class="row">
+                <button type="submit">Generate</button>
+            </div>
+
+
+
+
+        </EditForm>
+        </div>
+    </RadzenCard>
+
+        @code {
+
+            List<DocumentTemplate> Templates { get; set; } = new List<DocumentTemplate>();
+
+            DocumentTemplate SelectedTemplate { get; set; } = new DocumentTemplate();
+
+            [Inject]
+            private IDoctrimAPIService DoctrimAPIService { get; set; }
+
+            protected async override Task OnInitializedAsync()
+            {
+                try
+                {
+                    Templates = await DoctrimAPIService.GetTemplates();
+                }
+                catch
+                { }
+            }
+
+            [Inject]
+            private NavigationManager NavigationManager { get; set; }
+            protected void Generate()
+            {
+                if (SelectedTemplate.UniqueId != Guid.Empty)
+                {
+                    NavigationManager.NavigateTo($"https://localhost:44398/api/templates/GenerateDocument/{SelectedTemplate.UniqueId}");
+                }
+            }
+        }

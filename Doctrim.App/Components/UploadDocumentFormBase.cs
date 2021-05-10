@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Doctrim.App.Components
 {
-    public class UploadFormBase : ComponentBase
+    public class UploadDocumentFormBase : ComponentBase
     {
 
         public DocumentFile Model { get; set; } = new DocumentFile();
@@ -38,10 +38,12 @@ namespace Doctrim.App.Components
 
         protected async override Task OnInitializedAsync()
         {
-            try { 
+            try 
+            { 
             DocumentTypes = (await DoctrimAPIService.GetDocumentTypes()).ToList();
             }
-            catch { }
+            catch 
+            { }
 
         }
 

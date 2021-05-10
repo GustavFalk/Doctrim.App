@@ -36,21 +36,21 @@
     </RadzenCard>
 
     <RadzenCard Style="width:45%; margin-bottom: 20px; height:500px;">
-        <div class="row">
-            <EditForm Model="FileGuid">
-
+        <EditForm Model="FileGuid">
+            <div class="row">
                 <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@FileGuid Data=@DocumentFiles TextProperty="DocumentName" ValueProperty="UniqueId"
                                Style="height:25vw; width: 25vw" />
-                @if (FileGuid != Guid.Empty)
-                {
-                    ///TODO: Make an api call that works in the same way
-                    ///
-            <div class="row">
-                <a href="https://localhost:44398/api/documents/download/@FileGuid" download="file.pdf">DOWNLOAD</a>
             </div>
-                }
-            </EditForm>
-        </div>
+            @if (FileGuid != Guid.Empty)
+            {
+                ///TODO: Make an api call that works in the same way
+                ///
+                <div class="row">
+                    <RadzenButton Click="DocumentDownload">Download</RadzenButton>
+                </div>
+            }
+        </EditForm>
+
     </RadzenCard>
 </div>
 

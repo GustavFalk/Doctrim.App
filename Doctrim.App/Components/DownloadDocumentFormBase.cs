@@ -43,30 +43,9 @@ namespace Doctrim.App.Components
             {
 
             }
-        }
+        }    
 
-     
-
-        //protected async Task GetDocumentsFromType()
-        //{
-        //    DocumentFiles = await DoctrimAPIService.GetDocumentFilesFromType(SelectedType);
-        //}
-
-        //protected async Task GetDocumentsBetweenDates()
-        //{
-        //    if (First != DateTime.MinValue && Last != DateTime.MinValue)
-        //    {
-        //        DocumentFiles = await DoctrimAPIService.GetDocumentFilesBetweenDates(First, Last);
-        //    }
-        //}
-
-        //protected async Task GetDocumentsFromTag()
-        //{
-        //    if (SearchTag != null)
-        //    {
-        //        DocumentFiles = await DoctrimAPIService.GetDocumentFromTag(SearchTag);
-        //    }
-        //}
+       
 
         protected async Task DocumentSearch()
         {
@@ -84,6 +63,13 @@ namespace Doctrim.App.Components
                 DocumentFiles = await DoctrimAPIService.DocumentSearch(SearchParameters);
             }
 
+        }
+
+        [Inject]
+       private NavigationManager NavigationManager { get; set; }
+        protected void DocumentDownload()
+        {
+            NavigationManager.NavigateTo($"https://localhost:44398/api/documents/download/{FileGuid}");
         }
     }
 }
