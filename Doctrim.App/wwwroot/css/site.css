@@ -51,4 +51,5 @@ a, .btn-link {
 
     .sitecards{
         display: flex;
+        width: 100%;
     }

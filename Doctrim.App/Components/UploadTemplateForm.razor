@@ -1,26 +1,30 @@
-﻿<h3>Upload Template</h3>
-<EditForm Model="TemplatePost" OnValidSubmit="Upload">
+﻿
 
-    <RadzenCard Style="width:50%; margin-bottom: 20px; height:500px;">
-        <div class="col-md-4">
+    
+<RadzenCard Style="width:45%; margin-bottom: 20px; height:500px;">
+    <div class="col-md-5">
+        <EditForm Model="TemplatePost" OnValidSubmit="Upload">
+            <div class="row"><h3>Upload Template</h3></div>
             <div class="row">
-                <InputFile @bind-Value="TemplatePost.FileByteArray" OnChange="OnInputFileChange" />
+                <InputFile @bind-Value="TemplatePost.FileByteArray" OnChange="OnInputFileChange"/>
             </div>
-          
+
             <div class="row">
                 <RadzenLabel Text="Template Name:" />
                 <RadzenTextBox @bind-Value="TemplatePost.TemplateDTO.TemplateName"></RadzenTextBox>
             </div>
-        
+
             <div class="row">
-                <button type="submit">Upload Template</button>
+                <RadzenButton type="submit">Upload</RadzenButton>
             </div>
             <div class="row">
                 <RadzenLabel Text=@Message />
             </div>
-        </div>
-    </RadzenCard>
-</EditForm>
+        </EditForm>
+    </div>
+</RadzenCard>
+      
+
 
 @code {
 

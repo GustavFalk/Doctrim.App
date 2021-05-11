@@ -1,0 +1,33 @@
+﻿<div class="row">
+    <RadzenButton Style="margin: 20px; width: 150px" Click="NavUpload">
+        Upload
+    </RadzenButton>
+    <RadzenButton Style="margin: 20px; width: 150px" Click="NavDownload">
+        Download
+    </RadzenButton>
+    <RadzenButton Style="margin: 20px; width: 150px" Click="NavGenerate">
+       Generate
+    </RadzenButton>
+</div>
+
+@code {
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    private void NavUpload()
+    {
+        NavigationManager.NavigateTo("UploadDocument");
+    }
+
+    private void NavDownload()
+    {
+        NavigationManager.NavigateTo("DownloadDocument");
+    }
+
+    private void NavGenerate()
+    {
+        NavigationManager.NavigateTo("GenerateDocument");
+    }
+
+}
