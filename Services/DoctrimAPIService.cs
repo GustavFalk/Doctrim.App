@@ -8,7 +8,6 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.IO;
 
 namespace Services
@@ -28,7 +27,7 @@ namespace Services
             { 
             return await _httpClient.GetJsonAsync<List<DocumentType>>("api/DocumentTypes");
             }
-            catch (HttpRequestException httpEx)
+            catch 
             {
                 return null;
                 // determine error here by inspecting httpEx.Message
@@ -48,7 +47,7 @@ namespace Services
                 return true;
 
             }
-            catch (HttpRequestException httpEx)
+            catch
             {
 
                 return false;
@@ -66,7 +65,7 @@ namespace Services
                 return true;
 
             }
-            catch (HttpRequestException httpEx)
+            catch
             {
 
                 return false;
@@ -81,7 +80,7 @@ namespace Services
             return await _httpClient.GetJsonAsync<List<DocumentFile>>("api/Documents");
 
             }
-            catch (HttpRequestException httpEx)
+            catch
             {
                 return null;
                 // determine error here by inspecting httpEx.Message
@@ -96,55 +95,6 @@ namespace Services
            
         }
 
-        public async Task<List<DocumentFile>> GetDocumentFilesFromType(DocumentType type)
-        {
-            try
-            {             
-
-                return await _httpClient.GetJsonAsync<List<DocumentFile>>($"api/Documents/ByType/{type.UniqueId}");
-                
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return null;
-                // determine error here by inspecting httpEx.Message
-                // TODO: add errorhandling
-            }
-
-
-
-        }
-
-        public async Task<List<DocumentFile>> GetDocumentFilesBetweenDates(DateTime first, DateTime last)
-        {
-            try
-            {
-                return await _httpClient.GetJsonAsync<List<DocumentFile>>($"api/Documents/BetweenDates/{first}&&{last}");                
-                
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return null;
-                // determine error here by inspecting httpEx.Message
-                // TODO: add errorhandling
-            }
-        }
-
-        public async Task<List<DocumentFile>> GetDocumentFromTag(string tag)
-        {
-            try
-            {
-                return await _httpClient.GetJsonAsync<List<DocumentFile>>($"api/Documents/FromTag/{tag}");
-
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return null;
-                // determine error here by inspecting httpEx.Message
-                // TODO: add errorhandling
-            }
-        }
-
         public async Task<List<DocumentFile>> DocumentSearch(SearchDTO searchParameters)
         {
             try
@@ -155,7 +105,7 @@ namespace Services
                     $"&Until={searchParameters.Until}&TagName={searchParameters.TagName}&LegalEntityGuid={searchParameters.LegalEntityGuid}");
 
             }
-           catch (HttpRequestException httpEx)
+           catch
             {
                 return null;
                 // determine error here by inspecting httpEx.Message
@@ -172,10 +122,10 @@ namespace Services
                 return await _httpClient.GetJsonAsync<List<DocumentTemplate>>("api/Templates");
 
             }
-            catch (HttpRequestException httpEx)
+            catch //catch httpexception
             {
                 return null;
-                // determine error here by inspecting httpEx.Message
+                // determine error here by inspecting httpException.Message
                 // TODO: add errorhandling
             }
         }

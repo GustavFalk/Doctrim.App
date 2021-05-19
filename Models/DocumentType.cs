@@ -9,8 +9,8 @@ namespace Models
 {
     public class DocumentType
     {
-       
-             
+
+        
         public Guid UniqueId { get; set; }
         [Required]
         public string Type { get; set; }

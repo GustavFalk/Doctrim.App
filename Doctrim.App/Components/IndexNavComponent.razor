@@ -1,4 +1,6 @@
-﻿<div class="row">
+﻿@inherits IndexNavComponentBase
+
+<div class="row">
     <RadzenButton Style="margin: 20px; width: 150px" Click="NavUpload">
         Upload
     </RadzenButton>
@@ -9,25 +11,3 @@
        Generate
     </RadzenButton>
 </div>
-
-@code {
-
-    [Inject]
-    private NavigationManager NavigationManager { get; set; }
-
-    private void NavUpload()
-    {
-        NavigationManager.NavigateTo("UploadDocument");
-    }
-
-    private void NavDownload()
-    {
-        NavigationManager.NavigateTo("DownloadDocument");
-    }
-
-    private void NavGenerate()
-    {
-        NavigationManager.NavigateTo("GenerateDocument");
-    }
-
-}

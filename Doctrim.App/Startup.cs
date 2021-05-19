@@ -30,7 +30,8 @@ namespace Doctrim.App
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            
+
+           
             var doctrimApiURI = new Uri("https://localhost:44398/");
 
             void RegisterTypedClient<TClient, TImplementation>(Uri apiBaseurl)
